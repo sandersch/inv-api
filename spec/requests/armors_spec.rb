@@ -19,6 +19,7 @@ RSpec.describe "/armors", type: :request do
   let(:valid_attributes) {
     {
       name: "some example armor",
+      armor_base_id: 8,
       weight: 12,
       enchant: 20,
     }

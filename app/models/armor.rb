@@ -1,4 +1,6 @@
 class Armor < ApplicationRecord
+  belongs_to :armor_base
+
   validates :name, :enchant, :weight, presence: true
   validates :enchant, numericality: {
     only_integer: true,
@@ -9,4 +11,5 @@ class Armor < ApplicationRecord
     only_integer: true,
     greater_than_or_equal_to: 0
   }
+  validates :armor_base, presence: true
 end

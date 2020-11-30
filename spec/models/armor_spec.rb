@@ -7,6 +7,7 @@ RSpec.describe Armor, type: :model do
       name: "a tested item",
       enchant: 20,
       weight: 16,
+      armor_base_id: 8,
     }
   end
 
@@ -17,6 +18,21 @@ RSpec.describe Armor, type: :model do
   end
 
   describe "an invalid item" do
+    describe "with no armor base / asg" do
+      let(:item_attrs) { valid_attrs.merge(armor_base_id: nil) }
+
+      it { should be_invalid }
+    end
+
+    describe "with an invalid armor base" do
+      let(:item_attrs) { valid_attrs.merge(armor_base_id: 3) }
+
+      it do
+        item.save
+        should be_invalid
+      end
+    end
+
     describe "with no name" do
       let(:item_attrs) { valid_attrs.merge(name: "") }
 

@@ -30,5 +30,5 @@
   { id: 20, group: 5, name: "Full Plate",             weight: 75, rt: 12, ap: -35, cva: -21 },
 ].each do |attrs|
   base = ArmorBase.where(id: attrs[:id]).first_or_initialize
-  base.update_attributes!(attrs)
+  base.update!(attrs)
 end
