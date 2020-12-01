@@ -1,5 +1,7 @@
 class Armor < ApplicationRecord
   belongs_to :armor_base
+  alias_attribute :asg, :armor_base_id
+  alias_attribute :base, :armor_base
 
   validates :name, :enchant, :weight, presence: true
   validates :enchant, numericality: {

@@ -46,6 +46,6 @@ class ArmorsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def armor_params
-      params.require(:armor).permit(:name, :enchant, :ensorcell, :critical_services, :damage_services, :weight, :armor_base_id)
+      params.require(:armor).permit(:name, :enchant, :ensorcell, :critical_services, :damage_services, :weight, :armor_base_id, :asg)
     end
 end
