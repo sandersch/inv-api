@@ -10,15 +10,14 @@ class ArmorsController < ApplicationController
 
   # GET /armors/1
   def show
-    render json: @armor
+    render json: armor_as_json
   end
 
   # POST /armors
   def create
     @armor = Armor.new(armor_params)
-
     if @armor.save
-      render json: @armor, status: :created, location: @armor
+      render json: armor_as_json, status: :created, location: @armor
     else
       render json: @armor.errors, status: :unprocessable_entity
     end
@@ -27,7 +26,7 @@ class ArmorsController < ApplicationController
   # PATCH/PUT /armors/1
   def update
     if @armor.update(armor_params)
-      render json: @armor
+      render json: armor_as_json
     else
       render json: @armor.errors, status: :unprocessable_entity
     end
@@ -44,8 +43,21 @@ class ArmorsController < ApplicationController
       @armor = Armor.find(params[:id])
     end
 
+    def armor_as_json
+      ArmorSerializer.new(@armor).serializable_hash
+    end
+
     # Only allow a trusted parameter "white list" through.
     def armor_params
-      params.require(:armor).permit(:name, :enchant, :ensorcell, :critical_services, :damage_services, :weight, :armor_base_id, :asg)
+      params.require(:armor)
+        .permit(
+          :name, :enchant, :ensorcell, :critical_services, :damage_services, :weight, :armor_base_id, :asg
+      ).tap do |attrs|
+        attrs[:properties_attributes] = property_params if property_params.any?
+      end
+    end
+
+    def property_params
+      params.require(:armor).permit(:properties => [:slot, :kind, :effect, :amount]).fetch(:properties, [])
     end
 end

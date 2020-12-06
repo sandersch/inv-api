@@ -3,6 +3,8 @@ class Armor < ApplicationRecord
   alias_attribute :asg, :armor_base_id
   alias_attribute :base, :armor_base
 
+  has_many :properties, class_name: "ItemProperty"
+
   validates :name, :enchant, :weight, presence: true
   validates :enchant, numericality: {
     only_integer: true,
@@ -14,4 +16,10 @@ class Armor < ApplicationRecord
     greater_than_or_equal_to: 0
   }
   validates :armor_base, presence: true
+
+  accepts_nested_attributes_for :properties
+
+  def primary_property
+    properties.where(slot: "primary").first
+  end
 end

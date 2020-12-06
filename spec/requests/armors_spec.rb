@@ -22,8 +22,11 @@ RSpec.describe "/armors", type: :request do
       asg: 8,
       weight: 12,
       enchant: 20,
-    }
+    }.tap do |attrs|
+      attrs[:properties] if properties
+    end
   }
+  let(:properties) { nil }
 
   let(:invalid_attributes) {
     {
@@ -31,6 +34,9 @@ RSpec.describe "/armors", type: :request do
       weight: "weird",
       enchant: 1.5,
     }
+  }
+  let(:parsed_response) {
+    JSON.parse(response.body)["data"]
   }
 
   # This should return the minimal set of values that should be in the headers
@@ -59,6 +65,12 @@ RSpec.describe "/armors", type: :request do
 
   describe "POST /create" do
     context "with valid parameters" do
+      let(:properties) do
+        [
+          { slot: "primary", kind: "flare", effect: "grapple" }
+        ]
+      end
+
       it "creates a new Armor" do
         expect {
           post armors_url,
@@ -71,6 +83,7 @@ RSpec.describe "/armors", type: :request do
              params: { armor: valid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
+        expect(parsed_response["attributes"]).to include_json(valid_attributes)
       end
     end
 
