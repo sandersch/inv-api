@@ -23,7 +23,7 @@ RSpec.describe "/armors", type: :request do
       weight: 12,
       enchant: 20,
     }.tap do |attrs|
-      attrs[:properties] if properties
+      attrs[:properties] = properties if properties
     end
   }
   let(:properties) { nil }
@@ -67,7 +67,7 @@ RSpec.describe "/armors", type: :request do
     context "with valid parameters" do
       let(:properties) do
         [
-          { slot: "primary", kind: "flare", effect: "grapple" }
+          { slot: "primary", kind: "flare", effect: "grapple" },
         ]
       end
 
@@ -133,6 +133,7 @@ RSpec.describe "/armors", type: :request do
               params: { armor: new_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to eq("application/json; charset=utf-8")
+        expect(parsed_response["attributes"]).to include_json(new_attributes)
       end
     end
 
