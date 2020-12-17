@@ -3,9 +3,9 @@ class ArmorsController < ApplicationController
 
   # GET /armors
   def index
-    @armors = Armor.all
+    armors = Armor.all
 
-    render json: @armors
+    render json: ArmorSerializer.new(armors).serializable_hash
   end
 
   # GET /armors/1
@@ -47,17 +47,26 @@ class ArmorsController < ApplicationController
       ArmorSerializer.new(@armor).serializable_hash
     end
 
+    def armors_as_json
+      ArmorSerializer.new(@armors).serializable_hash
+    end
+
     # Only allow a trusted parameter "white list" through.
     def armor_params
       params.require(:armor)
         .permit(
           :name, :enchant, :ensorcell, :critical_services, :damage_services, :weight, :armor_base_id, :asg
       ).tap do |attrs|
-        attrs[:properties_attributes] = property_params if property_params.any?
+        attrs[:properties_attributes]  = property_params   if property_params.any?
+        attrs[:resistances_attributes] = resistance_params if resistance_params.any?
       end
     end
 
     def property_params
       params.require(:armor).permit(:properties => [:slot, :kind, :effect, :amount]).fetch(:properties, [])
+    end
+
+    def resistance_params
+      params.require(:armor).permit(:resistances => [:kind, :percent_protection, :temporary]).fetch(:resistances, [])
     end
 end

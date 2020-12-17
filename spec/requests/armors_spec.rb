@@ -24,9 +24,11 @@ RSpec.describe "/armors", type: :request do
       enchant: 20,
     }.tap do |attrs|
       attrs[:properties] = properties if properties
+      attrs[:resistances] = resistances if resistances
     end
   }
   let(:properties) { nil }
+  let(:resistances) { nil }
 
   let(:invalid_attributes) {
     {
@@ -68,6 +70,13 @@ RSpec.describe "/armors", type: :request do
       let(:properties) do
         [
           { slot: "primary", kind: "flare", effect: "grapple" },
+        ]
+      end
+
+      let(:resistances) do
+        [
+          { kind: "acid",  percent_protection: 40, temporary: false },
+          { kind: "crush", percent_protection: 25, temporary: true  },
         ]
       end
 
@@ -123,7 +132,7 @@ RSpec.describe "/armors", type: :request do
               params: { armor: new_attributes }, headers: valid_headers, as: :json
         armor.reload
         new_attributes.each do |(attr, value)|
-          expect(armor.attributes[attr.to_s]).to eq new_attributes[attr]
+          expect(armor.attributes[attr.to_s]).to eq value
         end
       end
 

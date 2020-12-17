@@ -6,5 +6,7 @@ class ArmorSerializer
   attribute :critical_services, if: Proc.new { |record| record.critical_services.present? }
   attribute :damage_services,   if: Proc.new { |record| record.damage_services.present? }
 
+  attribute :resistances
+
   attributes :properties, :created_at, :updated_at
 end
