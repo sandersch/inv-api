@@ -55,10 +55,11 @@ class ArmorsController < ApplicationController
     def armor_params
       params.require(:armor)
         .permit(
-          :name, :enchant, :ensorcell, :critical_services, :damage_services, :weight, :armor_base_id, :asg
+          :name, :enchant, :ensorcell, :critical_services, :damage_services, :weight, :armor_base_id, :asg, :bane_against
       ).tap do |attrs|
         attrs[:properties_attributes]  = property_params   if property_params.any?
         attrs[:resistances_attributes] = resistance_params if resistance_params.any?
+        attrs[:bane_effect_attributes] = bane_params if bane_params.present?
       end
     end
 
@@ -68,5 +69,9 @@ class ArmorsController < ApplicationController
 
     def resistance_params
       params.require(:armor).permit(:resistances => [:kind, :percent_protection, :temporary]).fetch(:resistances, [])
+    end
+
+    def bane_params
+      params.require(:armor).permit(:bane_effect => [:slot, :kind, :effect, :amount]).fetch(:bane_effect, Hash.new)
     end
 end

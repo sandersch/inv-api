@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_09_051256) do
+ActiveRecord::Schema.define(version: 2020_12_17_224849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,7 +36,10 @@ ActiveRecord::Schema.define(version: 2020_12_09_051256) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "armor_base_id", null: false
+    t.string "bane_against"
+    t.bigint "bane_effect_id"
     t.index ["armor_base_id"], name: "index_armors_on_armor_base_id"
+    t.index ["bane_effect_id"], name: "index_armors_on_bane_effect_id"
   end
 
   create_table "item_properties", force: :cascade do |t|
@@ -68,6 +71,7 @@ ActiveRecord::Schema.define(version: 2020_12_09_051256) do
   end
 
   add_foreign_key "armors", "armor_bases", column: "armor_base_id"
+  add_foreign_key "armors", "item_properties", column: "bane_effect_id"
   add_foreign_key "item_properties", "armors"
   add_foreign_key "resistances", "armors"
 end

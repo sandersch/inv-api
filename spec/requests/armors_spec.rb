@@ -123,6 +123,8 @@ RSpec.describe "/armors", type: :request do
           ensorcell: 5,
           critical_services: 10,
           damage_services: 5,
+          bane_against: 'undead',
+          bane_effect: { slot: "bane", kind: "offensive", effect: "bonus", amount: 10 },
         }
       }
 
@@ -132,7 +134,11 @@ RSpec.describe "/armors", type: :request do
               params: { armor: new_attributes }, headers: valid_headers, as: :json
         armor.reload
         new_attributes.each do |(attr, value)|
-          expect(armor.attributes[attr.to_s]).to eq value
+          if value.is_a?(Hash)
+            expect(armor.send(attr).as_json).to include_json(value)
+          else
+            expect(armor.attributes[attr.to_s]).to eq value
+          end
         end
       end
 

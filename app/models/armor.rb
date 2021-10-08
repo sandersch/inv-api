@@ -5,6 +5,7 @@ class Armor < ApplicationRecord
 
   has_many :properties, class_name: "ItemProperty"
   has_many :resistances
+  has_one :bane_effect, class_name: "ItemProperty"
 
   validates :name, :enchant, :weight, presence: true
   validates :enchant, numericality: {
@@ -20,6 +21,7 @@ class Armor < ApplicationRecord
 
   accepts_nested_attributes_for :properties
   accepts_nested_attributes_for :resistances
+  accepts_nested_attributes_for :bane_effect
 
   def primary_property
     properties.where(slot: "primary").first
